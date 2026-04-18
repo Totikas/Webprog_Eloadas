@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>JS CRUD - Notebookok</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Webprogramozás 1 – JS CRUD</h1>
+</header>
+
+<nav>
+    <a href="index.html">Főoldal</a>
+    <a class="active" href="javascript.html">JavaScript CRUD</a>
+    <a href="react.html">React CRUD</a>
+    <a href="spa.html">SPA Menü</a>
+    <a href="fetchapi.html">Fetch API</a>
+    <a href="axios.html">Axios Menü</a>
+    <a href="oojs.html">OOJS Menü</a>
+</nav>
+
+<main>
+    <h2>Notebook lista (memóriában)</h2>
+
+    <div id="form">
+        <h3 id="formCim">Új notebook</h3>
+
+        <input type="hidden" id="editId">
+
+        <label>Gyártó:</label>
+        <input id="gyarto">
+
+        <label>Típus:</label>
+        <input id="tipus">
+
+        <label>Kijelző:</label>
+        <input id="kijelzo" type="number">
+
+        <label>Memória:</label>
+        <input id="memoria" type="number">
+
+        <label>Ár:</label>
+        <input id="ar" type="number">
+
+        <button onclick="mentes()">Mentés</button>
+        <button id="megse" onclick="formReset()" style="display:none;">Mégse</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th><th>Gyártó</th><th>Típus</th><th>Kijelző</th><th>Memória</th><th>Ár</th><th></th>
+            </tr>
+        </thead>
+        <tbody id="tabla"></tbody>
+    </table>
+</main>
+
+<footer>
+    <p>Készítette: Tóth László Gergő – YH33PJ</p>
+</footer>
+
+<script src="notebook.js"></script>
+</body>
+</html>
