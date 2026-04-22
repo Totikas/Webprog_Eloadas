@@ -25,7 +25,7 @@
     <h2>SPA alkalmazások</h2>
 
     <div style="text-align:center; margin-bottom:20px;">
-        <button onclick="loadApp('calc')">Számológép</button>
+        <button onclick="loadApp('app1')">Stopper</button>
         <button onclick="loadApp('tictactoe')">Tic‑Tac‑Toe</button>
     </div>
 
@@ -38,8 +38,8 @@
 
 <script>
 function loadApp(which) {
-    if (which === "calc") {
-        document.getElementById("appFrame").src = "react/calc/dist/index.html";
+    if (which === "app1") {
+        document.getElementById("appFrame").src = "react/app1/dist/index.html";
     } else if (which === "tictactoe") {
         document.getElementById("appFrame").src = "react/tictactoe/dist/index.html";
     }
