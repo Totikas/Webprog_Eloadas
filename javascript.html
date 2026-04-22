@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReNew Kft. - JS CRUD</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+        }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
+        header { background-color: var(--primary-color); color: white; text-align: center; padding: 1rem; }
+        header h1 { margin: 0; font-size: 1.5rem; }
+        nav { background-color: white; padding: 1rem; display: flex; justify-content: center; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        nav a { text-decoration: none; color: var(--primary-color); padding: 8px 16px; border: 2px solid var(--secondary-color); border-radius: 20px; font-weight: bold; }
+        nav a:hover, nav a.active { background-color: var(--secondary-color); color: white; }
+        footer { background-color: var(--primary-color); color: white; text-align: center; padding: 1.5rem; margin-top: auto; }
+        
+        main { max-width: 1200px; margin: 2rem auto; padding: 0 20px; width: 100%; box-sizing: border-box; }
+        .crud-container { display: flex; gap: 20px; flex-wrap: wrap; }
+        .form-section, .table-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .form-section { flex: 1; min-width: 300px; }
+        .table-section { flex: 2; min-width: 600px; overflow-x: auto; }
+        
+        input, button { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: var(--secondary-color); color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #2980b9; }
+        .btn-cancel { background-color: #95a5a6; display: none; }
+        .btn-cancel:hover { background-color: #7f8c8d; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: var(--primary-color); color: white; }
+        .action-btn { padding: 5px 10px; margin: 2px; width: auto; font-size: 0.9em; }
+        .btn-edit { background-color: #f39c12; }
+        .btn-edit:hover { background-color: #d68910; }
+        .btn-delete { background-color: var(--accent-color); }
+        .btn-delete:hover { background-color: #c0392b; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Web programozás-1 Előadás Házi feladat</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Főoldal</a>
+        <a href="javascript.html" class="active">JavaScript CRUD</a>
+        <a href="react.html">React CRUD</a>
+        <a href="spa.html">SPA Menü</a>
+        <a href="fetchapi.html">Fetch API</a>
+        <a href="axios.html">Axios Menü</a>
+        <a href="oojs.html">OOJS Menü</a>
+    </nav>
+
+    <main>
+        <h2>Notebook Készlet (Memóriában tárolt adatok)</h2>
+        <div class="crud-container">
+            
+            <div class="form-section">
+                <h3 id="formTitle">Új Notebook hozzáadása</h3>
+                <form id="notebookForm">
+                    <input type="hidden" id="editId">
+                    <label>Gyártó:</label>
+                    <input type="text" id="gyarto" required>
+                    
+                    <label>Típus:</label>
+                    <input type="text" id="tipus" required>
+                    
+                    <label>Kijelző (col):</label>
+                    <input type="number" step="0.1" id="kijelzo" required>
+                    
+                    <label>Memória (MB):</label>
+                    <input type="number" id="memoria" required>
+                    
+                    <label>Ár (Ft):</label>
+                    <input type="number" id="ar" required>
+                    
+                    <button type="submit" id="submitBtn">Hozzáadás</button>
+                    <button type="button" id="cancelBtn" class="btn-cancel" onclick="resetForm()">Mégse</button>
+                </form>
+            </div>
+
+            <div class="table-section">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Gyártó</th>
+                            <th>Típus</th>
+                            <th>Kijelző</th>
+                            <th>Memória</th>
+                            <th>Ár</th>
+                            <th>Műveletek</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Készítette:</p>
+        <p><strong>[Saját Neved]</strong> - [Neptun Kódod]</p>
+        <p><strong>[Párod Neve]</strong> - [Párod Neptun Kódja]</p>
+    </footer>
+
+    <script>
+        let notebooks = [
+            { id: 1, gyarto: 'HP', tipus: 'COMPAQ 615 NX556EA', kijelzo: 15.6, memoria: 1024, ar: 95120 },
+            { id: 2, gyarto: 'ASUS', tipus: 'K51AC-SX001D', kijelzo: 15.6, memoria: 2048, ar: 101200 },
+            { id: 3, gyarto: 'HP', tipus: 'Pavilion DV6-1110EH', kijelzo: 15.6, memoria: 3072, ar: 167920 },
+            { id: 4, gyarto: 'ACER', tipus: 'Aspire 5536G', kijelzo: 15.6, memoria: 2048, ar: 111920 }
+        ];
+
+        let nextId = 5;
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            notebooks.forEach(nb => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${nb.id}</td>
+                    <td>${nb.gyarto}</td>
+                    <td>${nb.tipus}</td>
+                    <td>${nb.kijelzo}"</td>
+                    <td>${nb.memoria} MB</td>
+                    <td>${nb.ar} Ft</td>
+                    <td>
+                        <button class="action-btn btn-edit" onclick="editNotebook(${nb.id})">Módosít</button>
+                        <button class="action-btn btn-delete" onclick="deleteNotebook(${nb.id})">Töröl</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.getElementById('notebookForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('editId').value;
+            const newNotebook = {
+                gyarto: document.getElementById('gyarto').value,
+                tipus: document.getElementById('tipus').value,
+                kijelzo: parseFloat(document.getElementById('kijelzo').value),
+                memoria: parseInt(document.getElementById('memoria').value),
+                ar: parseInt(document.getElementById('ar').value)
+            };
+
+            if (id) {
+                const index = notebooks.findIndex(nb => nb.id == id);
+                newNotebook.id = parseInt(id);
+                notebooks[index] = newNotebook;
+                alert('Sikeresen módosítva!');
+            } else {
+                newNotebook.id = nextId++;
+                notebooks.push(newNotebook);
+                alert('Sikeresen hozzáadva!');
+            }
+
+            resetForm();
+            renderTable();
+        });
+
+        function editNotebook(id) {
+            const nb = notebooks.find(n => n.id == id);
+            if (!nb) return;
+
+            document.getElementById('editId').value = nb.id;
+            document.getElementById('gyarto').value = nb.gyarto;
+            document.getElementById('tipus').value = nb.tipus;
+            document.getElementById('kijelzo').value = nb.kijelzo;
+            document.getElementById('memoria').value = nb.memoria;
+            document.getElementById('ar').value = nb.ar;
+
+            document.getElementById('formTitle').innerText = 'Notebook szerkesztése';
+            document.getElementById('submitBtn').innerText = 'Mentés';
+            document.getElementById('cancelBtn').style.display = 'inline-block';
+        }
+
+        function deleteNotebook(id) {
+            if(confirm('Biztosan törölni szeretnéd ezt a notebookot?')) {
+                notebooks = notebooks.filter(nb => nb.id != id);
+                renderTable();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('notebookForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('formTitle').innerText = 'Új Notebook hozzáadása';
+            document.getElementById('submitBtn').innerText = 'Hozzáadás';
+            document.getElementById('cancelBtn').style.display = 'none';
+        }
+
+        renderTable();
+    </script>
+
+</body>
+</html>
