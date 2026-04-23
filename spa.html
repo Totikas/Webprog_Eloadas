@@ -26,22 +26,24 @@
 
     <div style="text-align:center; margin-bottom:20px;">
         <button onclick="loadApp('app1')">Stopper</button>
-        <button onclick="loadApp('tictactoe')">Tic‑Tac‑Toe</button>
+        <button onclick="loadApp('app2')">Tic‑Tac‑Toe</button>
     </div>
 
     <iframe id="appFrame" style="width:100%; height:500px; border:1px solid #aaa;"></iframe>
 </main>
 
 <footer>
-    <p>Készítette: Tóth László Gergő – YH33PJ</p>
-</footer>
+        <p>Készítette:</p>
+        <p><strong>Jónás Péter</strong> - UL3T7C</p>
+        <p><strong>Tóth László Gergő</strong> - YH33PJ</p>
+    </footer>
 
 <script>
 function loadApp(which) {
     if (which === "app1") {
         document.getElementById("appFrame").src = "react/app1/dist/index.html";
-    } else if (which === "tictactoe") {
-        document.getElementById("appFrame").src = "react/tictactoe/dist/index.html";
+    } else if (which === "app2") {
+        document.getElementById("appFrame").src = "react/app2/dist/index.html";
     }
 }
 </script>
